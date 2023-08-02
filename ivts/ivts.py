@@ -79,7 +79,7 @@ class IVTS(object):
 
         Returns the last received value for current or None if the value was
         not updated since last read."""
-        return self.get_measure_property(MeasureType.I)
+        return self.get_measure_property(self.MeasureType.I)
 
     @property
     def U1(self):
@@ -186,16 +186,17 @@ class IVTS(object):
         elif arbid >= 0x521 and arbid <= 0x528:
             return self.decode_result(msg)
 
-bus = can.Bus(interface="socketcan", channel="can0")
+if __name__ == "__main__":
+    bus = can.Bus(interface="socketcan", channel="can0")
 
-ivts = IVTS(canbus=bus)
-ivts.get_info(ivts.InfoItem.DEVICE_ID)
+    ivts = IVTS(canbus=bus)
+    ivts.get_info(ivts.InfoItem.DEVICE_ID)
 
-while True:
-    msg = bus.recv(timeout=0.1)
-    if msg:
-        ivts.decode(msg)
-        u1 = ivts.U1
-        if u1:
-            print(f"U1: {u1}")
+    while True:
+        msg = bus.recv(timeout=0.1)
+        if msg:
+            ivts.decode(msg)
+            u1 = ivts.U1
+            if u1:
+                print(f"U1: {u1}")
 
