@@ -27,3 +27,14 @@ the requirements.
     deactivate
     rm -rf venv
 
+## Viewing IVTS Output (temporary)
+
+Until a proper decoder is added, you can use the cantools `monitor` program
+to capture and display the IVTS CAN messages.
+
+Assuming you have a CAN interface up and running and is named `can0` you can
+use this:
+
+    python3 -m cantools monitor -c can0 IVT-S_12082020.dbc
+
+You can run this in a separate window from the example program above.
