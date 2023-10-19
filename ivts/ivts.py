@@ -41,9 +41,36 @@ class TriggerMode(Enum):
     CYCLIC = 2
 
 class LogItem(Enum):
+    ALL = 0  # only for resetting data - you cannot request "All"
     As_TOTAL = 1
     As_CHARGE = 2
     As_DISCHARGE = 3
+    Wh_TOTAL = 4
+    Wh_CHARGE = 5
+    Wh_DISCHARGE = 6
+    RUNTIME = 0x10
+    RUNTIME_IN_LIMITS = 0x11
+    RUNTIME_OUT_OF_LIMITS = 0x12
+    RUNTIME_U1_IN_LIMITS = 0x13
+    RUNTIME_U1_OUT_OF_LIMITS = 0x14
+    RUNTIME_U2_IN_LIMITS = 0x15
+    RUNTIME_U2_OUT_OF_LIMITS = 0x16
+    RUNTIME_U3_IN_LIMITS = 0x17
+    RUNTIME_U3_OUT_OF_LIMITS = 0x18
+    RUNTIME_T_IN_LIMITS = 0x19
+    RUNTIME_T_OUT_OF_LIMITS = 0x1A
+    RUNTIME_OVERCURRENT = 0x1B
+    RUNTIME_NEG_OVERCURRENT = 0x1C
+    I_MAX = 0x21
+    I_MIN = 0x22
+    U1_MAX = 0x23
+    U1_MIN = 0x24
+    U2_MAX = 0x25
+    U2_MIN = 0x26
+    U3_MAX = 0x27
+    U3_MIN = 0x28
+    T_MAX = 0x29
+    T_MIN = 0x2A
 
 
 class Encoder(object):
@@ -131,8 +158,34 @@ class Encoder(object):
         payload[0] = 0x3F
         return(0x411, payload)
 
+    def reset_logdata(self, log_item: LogItem, ser_num: int):
+        payload = bytearray(8)
+        payload[0] = 0x30
+        payload[1] = 2  # reset "logdata since reset"
+        payload[2] = log_item.value
+        payload[3] = (ser_num >> 24) & 0xFF
+        payload[4] = (ser_num >> 16) & 0xFF
+        payload[5] = (ser_num >> 8) & 0xFF
+        payload[6] = ser_num & 0xFF
+        return (0x411, payload)
+
     def get_logdata_item(self, log_item: LogItem, is_persistent: bool=False):
         payload = bytearray(8)
         payload[0] = 0x42 if is_persistent else 0x43
         payload[1] = log_item.value
+        return (0x411, payload)
+
+    def get_device_id(self):
+        payload = bytearray(8)
+        payload[0] = 0x79
+        return (0x411, payload)
+
+    def get_version(self):
+        payload = bytearray(8)
+        payload[0] = 0x7A
+        return (0x411, payload)
+
+    def get_serial_num(self):
+        payload = bytearray(8)
+        payload[0] = 0x7B
         return (0x411, payload)
