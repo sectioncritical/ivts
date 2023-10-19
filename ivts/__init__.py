@@ -1,1 +1,1 @@
-from .ivts import Encoder, MeasureType, TriggerMode
+from .ivts import Encoder, MeasureType, TriggerMode, LogItem

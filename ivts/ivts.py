@@ -40,6 +40,11 @@ class TriggerMode(Enum):
     TRIGGERED = 1
     CYCLIC = 2
 
+class LogItem(Enum):
+    As_TOTAL = 1
+    As_CHARGE = 2
+    As_DISCHARGE = 3
+
 
 class Encoder(object):
     def set_config(self, measure_type: MeasureType,
@@ -125,3 +130,9 @@ class Encoder(object):
         payload = bytearray(8)
         payload[0] = 0x3F
         return(0x411, payload)
+
+    def get_logdata_item(self, log_item: LogItem, is_persistent: bool=False):
+        payload = bytearray(8)
+        payload[0] = 0x42 if is_persistent else 0x43
+        payload[1] = log_item.value
+        return (0x411, payload)

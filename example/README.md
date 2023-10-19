@@ -1,5 +1,15 @@
 # Basic Example to use IVTS Encoder
 
+## Hardware Setup
+
+This example assumes that a CAN bus is configured and enabled and is using the
+name `can0`. For the typical RPi setup with MCP2515 board that has correct
+boot drivers installed, you can enable the CAN interface with:
+
+    sudo ip link set can0 up type can bitrate 500000
+
+## Example
+
 This is a simple example to show how to use the ivts.Encoder module to encode
 CAN messages that can be sent to an IVTS on a CAN bus.
 
